@@ -1,6 +1,8 @@
 require('dotenv').config();
 
 const express = require('express');
+const mongoose = require('mongoose');
+
 const authRoutes = require('./routes/Authentication_Routes/authentication')
 const expenseRoutes = require('./routes/Expense_Routes/expense')
 const itineraryRoutes = require('./routes/Itinerary_Routes/itinerary')
@@ -29,6 +31,17 @@ app.use('/api/trips/:id/polls', pollRoutes)
 app.use('/api/trips', tripRoutes)
 app.use('/api/users', userRoutes)
 
+//connnect to db
+mongoose.connect(process.env.MONGODB_URI)
+    .then(() => {
+        //listen for requests
+        app.listen(process.env.PORT, () => {
+            console.log('Connected to DB & listening for requests on port', process.env.PORT);
+        });
+    })
+    .catch((error) => {
+        console.log(error);
+    });
 
 //listen for requests
 app.listen(process.env.PORT, () => {

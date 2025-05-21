@@ -1,12 +1,24 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/', () => { })
+//GET journal entries
+router.get('/', (req, res) => {
+    res.json({ message: 'Get all journal entries' });
+ })
 
-router.post('/', () => { })
+//POST a new journal entry
+router.post('/', (req, res) => {
+    res.json({ message: 'Create a new journal entry' });
+ })
 
-router.put('/:entryId', () => { })
+//PUT update a journal entry
+router.put('/:entryId', (req, res) => {
+    res.json({ message: 'Update a journal entry' });
+ })
 
-router.delete('/:entryId', () => { })
+//DELETE a journal entry
+router.delete('/:entryId', (req, res) => {
+    res.json({ message: 'Delete a journal entry' });
+ })
 
 module.exports = router;

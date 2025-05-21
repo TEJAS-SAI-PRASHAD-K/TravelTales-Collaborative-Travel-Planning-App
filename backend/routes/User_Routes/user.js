@@ -1,14 +1,29 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/', () => { })
+//GET search users
+router.get('/', (req, res) => {
+    res.json({ message: 'Get all users' });
+ })
 
-router.get('/:id', () => { })
+//GET user by ID
+router.get('/:id', (req, res) => {
+    res.json({ message: `Get user with ID` });
+ })
 
-router.put('/:id', () => { })
+//PUT update user
+router.put('/:id', (req, res) => {
+    res.json({ message: `Update user with ID` });
+ })
 
-router.post('/friends/:id', () => { })
+//POST send friend request
+router.post('/friends/:id', (req, res) => {
+    res.json({ message: `Send friend request to user with ID` });
+ })
 
-router.delete('/friends/:id', () => { })
+//DELETE remove friend
+router.delete('/friends/:id', (req, res) => {
+    res.json({ message: `Remove friend with ID` });
+ })
 
 module.exports = router;

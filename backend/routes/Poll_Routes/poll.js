@@ -1,12 +1,24 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/', () => { })
+//GET polls
+router.get('/', (req, res) => {
+    res.json({ message: 'Get all polls' });
+ })
 
-router.post('/', () => { })
+//POST create a new poll
+router.post('/', (req, res) => {
+    res.json({ message: 'Create a new poll' });
+ })
 
-router.post('/:pollId/vote', () => { })
+//POST vote on a poll
+router.post('/:pollId/vote', (req, res) => {
+    res.json({ message: 'Vote on a poll' });
+ })
 
-router.delete('/:pollId', () => { })
+//DELETE a poll
+router.delete('/:pollId', (req, res) => {
+    res.json({ message: 'Delete a poll' });
+ })
 
 module.exports = router;
