@@ -2,6 +2,9 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel'); // Adjust path if needed
 const requireAuth = require('../middleware/authMiddleware');
+const nodemailer = require('nodemailer');
+
+require('dotenv').config();
 
 // Helper: Create JWT
 const createToken = (user) => {
@@ -45,7 +48,7 @@ const loginUser = async (req, res) => {
             return res.status(400).json({ error: 'Invalid credentials' });
 
         const token = createToken(user);
-        res.json({ token, user: { id: user._id, username: user.name, email } });
+        res.json({ token, user: { id: user._id, username: user.username, email } });
     } catch (err) {
         res.status(500).json({ error: 'Login failed' });
     }
@@ -70,10 +73,10 @@ const getUserProfile = async (req, res) => {
 
 //POST /request-password-reset
 const requestPasswordReset = async (req, res) => {
-    const { identifier } = req.body;
+    const { username, email } = req.body;
 
     const user = await User.findOne({
-        $or: [{ email: identifier }, { username: identifier }]
+        $or: [{ email: email }, { username: username }]
     });
 
     if (!user) {
@@ -88,11 +91,13 @@ const requestPasswordReset = async (req, res) => {
     await user.save();
 
     // Send email with nodemailer
+    const testAccount = await nodemailer.createTestAccount();
+    console.log(process.env.GMAIL_USER);
     const transporter = nodemailer.createTransport({
-        service: 'Gmail',
+        service: 'gmail',
         auth: {
-            user: 'your.email@gmail.com',
-            pass: 'yourpassword'
+            user: process.env.GMAIL_USER,
+            pass: process.env.GMAIL_PASS
         }
     });
 
@@ -111,12 +116,12 @@ const requestPasswordReset = async (req, res) => {
   
 //POST /verify-password-reset
 const verifyPasswordReset = async (req, res) => {
-    const { identifier, otp, newPassword } = req.body;
+    const { username, email, otp, newPassword } = req.body;
 
     const user = await User.findOne({
-        $or: [{ email: identifier }, { username: identifier }]
+        $or: [{ email: email }, { username: username }]
     });
-
+    console.log(otp);
     if (!user || user.resetPasswordOTP !== otp || Date.now() > user.resetPasswordExpiry) {
         return res.status(400).json({ message: 'Invalid OTP or OTP expired' });
     }
