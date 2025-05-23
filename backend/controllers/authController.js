@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('../../models/userModel'); // Adjust path if needed
-const requireAuth = require('../../middleware/authMiddleware');
+const User = require('../models/userModel'); // Adjust path if needed
+const requireAuth = require('../middleware/authMiddleware');
 
 // Helper: Create JWT
 const createToken = (user) => {

@@ -5,7 +5,7 @@ const {
     createItinerary,
     updateItineraryActivity,
     deleteItineraryActivity
-} = require('../controllers/itineraryController');
+} = require('../../controllers/itineraryController');
 
 //GET all itineraries
 router.get('/', getAllItineraries)
