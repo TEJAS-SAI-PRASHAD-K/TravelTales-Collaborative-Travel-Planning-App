@@ -68,9 +68,72 @@ const getUserProfile = async (req, res) => {
     }
 };
 
+//POST /request-password-reset
+const requestPasswordReset = async (req, res) => {
+    const { identifier } = req.body;
+
+    const user = await User.findOne({
+        $or: [{ email: identifier }, { username: identifier }]
+    });
+
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiry = Date.now() + 10 * 60 * 1000; // valid for 10 minutes
+
+    user.resetPasswordOTP = otp;
+    user.resetPasswordExpiry = expiry;
+    await user.save();
+
+    // Send email with nodemailer
+    const transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+            user: 'your.email@gmail.com',
+            pass: 'yourpassword'
+        }
+    });
+
+    const mailOptions = {
+        from: 'no-reply@yourapp.com',
+        to: user.email,
+        subject: 'Password Reset OTP',
+        text: `Your OTP is ${otp}. It expires in 10 minutes.`
+    };
+
+    transporter.sendMail(mailOptions, (err, info) => {
+        if (err) return res.status(500).json({ message: 'Failed to send OTP', error: err });
+        res.status(200).json({ message: 'OTP sent to email.' });
+    });
+};
+  
+//POST /verify-password-reset
+const verifyPasswordReset = async (req, res) => {
+    const { identifier, otp, newPassword } = req.body;
+
+    const user = await User.findOne({
+        $or: [{ email: identifier }, { username: identifier }]
+    });
+
+    if (!user || user.resetPasswordOTP !== otp || Date.now() > user.resetPasswordExpiry) {
+        return res.status(400).json({ message: 'Invalid OTP or OTP expired' });
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    user.resetPasswordOTP = undefined;
+    user.resetPasswordExpiry = undefined;
+
+    await user.save();
+    res.status(200).json({ message: 'Password reset successful.' });
+  };
+
 module.exports = {
     createUser,
     loginUser,
     logoutUser,
-    getUserProfile
+    getUserProfile,
+    requestPasswordReset,
+    verifyPasswordReset
 };

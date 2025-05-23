@@ -15,7 +15,14 @@ const userSchema = new mongoose.Schema({
         notificationSettings: {
             email: { type: Boolean, default: true },
             app: { type: Boolean, default: true }
-        }
+        },
+    resetPasswordOTP: {
+            type: String
+    },
+
+    resetPasswordExpiry: {
+            type: Date
+    }
     },
     createdAt: { type: Date, default: Date.now }
 });
