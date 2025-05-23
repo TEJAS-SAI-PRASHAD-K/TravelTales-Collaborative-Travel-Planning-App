@@ -1,24 +1,22 @@
 const express = require('express');
 const router = express.Router();
+const {
+    getAllItineraries,
+    createItinerary,
+    updateItineraryActivity,
+    deleteItineraryActivity
+} = require('../controllers/itineraryController');
 
 //GET all itineraries
-router.get('/', (req, res) => {
-    res.json({ message: 'Get all itineraries' });
- })
+router.get('/', getAllItineraries)
 
 //POST a new itinerary
-router.post('/', (req, res) => {
-    res.json({ message: 'Create a new itinerary' });
- })
+router.post('/', createItinerary)
 
 //PUT update an itinerary
-router.put('/:activityId', (req, res) => {
-    res.json({ message: 'Update an itinerary' });
- })
+router.put('/:activityId', updateItineraryActivity)
 
 //DELETE an itinerary
-router.delete('/:activityId', (req, res) => {
-    res.json({ message: 'Delete an itinerary' });
- })
+router.delete('/:activityId', deleteItineraryActivity)
 
 module.exports = router;

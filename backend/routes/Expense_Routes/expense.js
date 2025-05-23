@@ -1,30 +1,26 @@
 const express = require('express');
 const router = express.Router();
+const {
+    getAllExpenses,
+    addExpense,
+    updateExpense,
+    deleteExpense,
+    getExpensesByTrip
+} = require('../../controllers/expenseController');
 
 //GET all expenses
-router.get('/', (req, res) => {
-    res.json({ mssg: "Expense fetched successfully" });
- })
+router.get('/', getAllExpenses)
 
 //POST a new expense
-router.post('/', (req, res) => {
-    res.json({ mssg: "Expense added successfully" });
-})
+router.post('/', addExpense)
  
 //PUT update expense
-router.put('/:expenseId', (req, res) => {
-    res.json({ mssg: "Expense updated successfully" });
- })
+router.put('/:expenseId', updateExpense)
 
 //DELETE an expense
-router.delete('/:expenseId', (req, res) => {
-    const eid = req.params.expenseId;
-    res.json({ mssg: `Expense deleted successfully ${eid}` });
- })
+router.delete('/:expenseId', deleteExpense)
 
 //GET all expenses for a trip
-router.get('/summary', (req, res) => {
-    res.json({ mssg: "All Expense fetched successfully" });
- })
+router.get('/summary', getExpensesByTrip)
 
 module.exports = router;
